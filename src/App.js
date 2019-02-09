@@ -1,28 +1,71 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+
+import Block from './Block'
 
 class App extends Component {
+  constructor () {
+    super()
+
+    this.state = {
+      blocks: [
+        {
+          x: 0,
+          y: 1,
+        },
+        {
+          x: 0,
+          y: 0,
+        },
+        {
+          x: -1,
+          y: 0,
+        },
+        {
+          x: -2,
+          y: 0,
+        },
+        {
+          x: -3,
+          y: 0,
+        },
+        {
+          x: -3,
+          y: -1,
+        },
+        {
+          x: 0,
+          y: -1,
+        },
+      ]
+    }
+  }
+
+  addBlock = (nextCoordinates) => {
+    const prevBlocks = this.state.blocks
+
+    this.setState({
+      blocks: [
+        ...prevBlocks,
+        nextCoordinates,
+      ]
+    })
+  }
+
   render() {
+    const {
+      blocks
+    } = this.state
+
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        {
+          blocks.map((block, idx) =>
+            <Block coordinates={block} key={idx} handler={this.addBlock} />
+          )
+        }
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
