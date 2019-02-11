@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import { blockSize } from './App'
+
 class Block extends Component {
   isPositive = number => {
     return number / -1 <= 0
@@ -14,8 +16,6 @@ class Block extends Component {
   }
 
   render() {
-    const width = 100
-    const height = 100
     const {
       coordinates,
       handler,
@@ -26,8 +26,8 @@ class Block extends Component {
       y
     } = coordinates
 
-    const marginLeft = width * x
-    const marginTop = height * y
+    const marginLeft = blockSize.width * x
+    const marginTop = blockSize.height * y
 
     return (
       <div className="block" style={{

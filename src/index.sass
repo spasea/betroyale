@@ -1,0 +1,57 @@
+$block-width: 100px
+$block-height: 143px
+
+body
+  margin: 0
+  padding: 0
+
+.App
+  min-height: 100vh
+  min-width: 100vw
+  position: relative
+  background: green
+
+.block
+  width: $block-width
+  height: $block-height
+  display: flex
+  justify-content: center
+  align-items: center
+  border: 1px solid #000
+  box-sizing: border-box
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate3d(-50%, -50%, 0)
+
+  background: url(https://pngimage.net/wp-content/uploads/2018/06/hearthstone-cards-png-4.png) no-repeat center
+  background-size: contain
+
+  &__side
+    height: 8px
+    width: 8px
+    background: yellow
+    position: absolute
+    cursor: pointer
+
+    &--is-top, &--is-bottom
+      left: 50%
+      width: 12px
+      transform: translateX(-50%)
+
+    &--is-top
+      top: 0
+
+    &--is-bottom
+      bottom: 0
+
+    &--is-left, &--is-right
+      height: 12px
+      top: 50%
+      transform: translateY(-50%)
+
+    &--is-left
+      left: 0
+
+    &--is-right
+      right: 0

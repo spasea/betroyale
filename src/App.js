@@ -2,6 +2,11 @@ import React, { Component } from 'react'
 
 import Block from './Block'
 
+export const blockSize = {
+  width: 100,
+  height: 143
+}
+
 class App extends Component {
   constructor () {
     super()
@@ -80,11 +85,8 @@ class App extends Component {
   }
 
   updateSize = extremePositions => {
-    const blockHeight = 100
-    const blockWidth = 100
-
-    const width = (extremePositions.right * 2 + 2) * blockWidth
-    const height = (extremePositions.bottom * 2 + 2) * blockHeight
+    const width = (extremePositions.right * 2 + 2) * blockSize.width
+    const height = (extremePositions.bottom * 2 + 2) * blockSize.height
 
     console.log({
       width: `${width}px`,
