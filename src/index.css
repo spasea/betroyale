@@ -7,6 +7,8 @@ body {
   min-height: 100vh;
   min-width: 100vw;
   position: relative;
+  /*margin: 100px;*/
+  background: green;
 }
 
 .block {
@@ -15,13 +17,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: red;
+  /*background: red;*/
   border: 1px solid #000;
   box-sizing: border-box;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
+
+  background: url(https://pngimage.net/wp-content/uploads/2018/06/hearthstone-cards-png-4.png) no-repeat center;
+  background-size: contain;
 }
 
 .block__side {
