@@ -15,26 +15,26 @@ class App extends Component {
 
     this.state = {
       blocks: [
-        {
-          x: 0,
-          y: 5,
-        },
+        // {
+        //   x: 0,
+        //   y: 5,
+        // },
         {
           x: 0,
           y: 0,
         },
-        {
-          x: 0,
-          y: -5,
-        },
-        {
-          x: 5,
-          y: 0,
-        },
-        {
-          x: -5,
-          y: 0,
-        },
+        // {
+        //   x: 0,
+        //   y: -5,
+        // },
+        // {
+        //   x: 5,
+        //   y: 0,
+        // },
+        // {
+        //   x: -5,
+        //   y: 0,
+        // },
         // {
         //   x: -1,
         //   y: 0,
@@ -53,8 +53,8 @@ class App extends Component {
         // },
       ],
       extremePositions: {
-        right: 5,
-        bottom: 5,
+        right: 1,
+        bottom: 1,
       }
     }
   }
