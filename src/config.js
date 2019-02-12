@@ -1,20 +1,33 @@
+export const locations = 'locations'
+export const rooms = 'rooms'
+export const events = 'events'
+
 export default {
   production: {
     baseURL: '',
   },
   development: {
     baseURL: 'http://localhost:4000',
-    locations: {
+    [locations]: {
       get: {
-        url: '/Locations'
+        url: '/locations'
+      },
+      post: {
+        url: '/locations'
+      },
+      put: {
+        url: '/locations/__ID__'
+      },
+      delete: {
+        url: '/locations/__ID__'
       }
     },
-    rooms: {
+    [rooms]: {
       get: {
         url: '/rooms'
       }
     },
-    events: {
+    [events]: {
       get: {
         url: '/events'
       }
