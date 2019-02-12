@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 
 import Block from './Block'
 
-import {
-  AddLocations,
-} from './redux/actions/Locations'
+import { AddEvents } from './redux/actions/Events'
+import { AddLocations } from './redux/actions/Locations'
+import { AddRooms } from './redux/actions/Rooms'
 
 export const blockSize = {
   width: 100,
@@ -14,6 +14,8 @@ export const blockSize = {
 
 const mapDispatchToProps = dispatch => ({
   AddLocations: () => dispatch(AddLocations()),
+  AddRooms: () => dispatch(AddRooms()),
+  AddEvents: () => dispatch(AddEvents()),
 })
 
 class App extends Component {
@@ -103,6 +105,8 @@ class App extends Component {
 
   componentDidMount() {
     this.props.AddLocations()
+    this.props.AddRooms()
+    this.props.AddEvents()
     this.updateSize(this.state.extremePositions)
   }
 
