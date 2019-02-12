@@ -1,0 +1,1 @@
+export const ADD_LOCATIONS = 'ADD_LOCATIONS'

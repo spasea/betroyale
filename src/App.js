@@ -1,11 +1,20 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 import Block from './Block'
+
+import {
+  AddLocations,
+} from './redux/actions/Locations'
 
 export const blockSize = {
   width: 100,
   height: 143
 }
+
+const mapDispatchToProps = dispatch => ({
+  AddLocations: () => dispatch(AddLocations()),
+})
 
 class App extends Component {
   constructor () {
@@ -88,16 +97,12 @@ class App extends Component {
     const width = (extremePositions.right * 2 + 2) * blockSize.width
     const height = (extremePositions.bottom * 2 + 2) * blockSize.height
 
-    console.log({
-      width: `${width}px`,
-      height: `${height}px`,
-    })
-
     this.appRef.current.style.width = `${width}px`
     this.appRef.current.style.height = `${height}px`
   }
 
   componentDidMount() {
+    this.props.AddLocations()
     this.updateSize(this.state.extremePositions)
   }
 
@@ -118,4 +123,7 @@ class App extends Component {
   }
 }
 
-export default App
+export default connect(
+  null,
+  mapDispatchToProps
+)(App)
