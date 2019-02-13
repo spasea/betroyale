@@ -21,10 +21,7 @@ class Block extends Component {
       handler,
     } = this.props
 
-    const {
-      x,
-      y
-    } = coordinates
+    const { x, y } = coordinates
 
     const marginLeft = blockSize.width * x
     const marginTop = blockSize.height * y

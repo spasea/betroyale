@@ -2,6 +2,12 @@ export const locations = 'locations'
 export const rooms = 'rooms'
 export const events = 'events'
 
+export const locationExists = {
+  TOP: 'TOP',
+  MIDDLE: 'MIDDLE',
+  BOTTOM: 'BOTTOM',
+}
+
 export default {
   production: {
     baseURL: '',
