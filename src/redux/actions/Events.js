@@ -1,5 +1,6 @@
 import {
   ADD_EVENTS,
+  USE_EVENT,
 } from '../ActionTypes'
 
 import Http from '../../Services/Http'
@@ -20,3 +21,8 @@ export const AddEvents = () => async dispatch => {
 
   dispatch(addEvents(eventsList))
 }
+
+export const useEvent = payload => ({
+  type: USE_EVENT,
+  payload
+})
