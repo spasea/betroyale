@@ -4,8 +4,11 @@ import {
   PLACE_ROOM,
 } from '../ActionTypes'
 
+const getRoom = (state, roomId) =>
+  state.find(room => +room.id === +roomId)
+
 const changeRoomProp = (state, roomId, [title, value]) => {
-  const room = state.find(room => +room.id === +roomId)
+  const room = getRoom(state, roomId)
 
   if (!room) {
     return state
@@ -26,7 +29,20 @@ export default (state = [], action) => {
       return action.payload
 
     case USE_ROOM:
-      return changeRoomProp(state, action.payload.id, ['isUsed', action.payload.isUsed] )
+      const roomId = +action.payload
+      const room = getRoom(state, roomId)
+
+      if (!room) {
+        return state
+      }
+
+      return [
+        ...state.filter(room => +room.id !== roomId),
+        {
+          ...room,
+          isUsed: !room.isUsed,
+        }
+      ]
 
     case PLACE_ROOM:
       return changeRoomProp(state, action.payload.id, ['coordinates', action.payload.coordinates] )
