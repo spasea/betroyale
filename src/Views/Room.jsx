@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Block = ({ image }) =>
+const Room = () =>
   <div>
     
   </div>
 
-export default Block
+export default Room
