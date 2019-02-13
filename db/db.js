@@ -99,7 +99,8 @@ const initEvents = amount => {
 
   return Array(amount).fill(null).map((_, id) => ({
     id: id + 1,
-    title: faker.lorem.words(5),
+    title: faker.lorem.words(random(1, 3)),
+    description: faker.lorem.words(random(8, 13)),
     type: eventsTypes[random(0, eventsTypes.length - 1)]
   }))
 }
