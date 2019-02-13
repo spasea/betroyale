@@ -3,6 +3,14 @@ import axios from 'axios'
 import config from '../config'
 
 class Http {
+  static replaceParams (url, params) {
+    for (let param in params) {
+      url = url.replace(param, params[param])
+    }
+
+    return url
+  }
+
   static execute (route, method, options) {
     options = {
       params: {},
@@ -17,11 +25,7 @@ class Http {
       }
       : options.params
 
-    let url = config[env][route][method].url
-
-    for (let param in options.replace) {
-      url = url.replace(param, options.replace[param])
-    }
+    const url = Http.replaceParams(config[env][route][method].url, options.replace)
 
     return axios[method](url, configParams)
   }
