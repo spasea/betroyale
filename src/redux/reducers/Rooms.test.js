@@ -1,7 +1,7 @@
 import {
   addRooms,
   placeRoom,
-  toggleIsUsed,
+  useRoom,
 } from '../actions/Rooms'
 import Rooms from './Rooms'
 
@@ -20,7 +20,7 @@ describe('basic', () => {
   })
 })
 
-describe('toggle isUsed room property', () => {
+describe('use room', () => {
   const initialState = [
     {
       id: 1,
@@ -35,7 +35,7 @@ describe('toggle isUsed room property', () => {
   ]
 
   it('should toggle isUsed property if id is correct', () => {
-    const result = Rooms(initialState, toggleIsUsed(1))
+    const result = Rooms(initialState, useRoom(1))
 
     expect(result).toEqual([
       {
@@ -52,7 +52,7 @@ describe('toggle isUsed room property', () => {
   })
 
   it('should change nothing if id is incorrect', () => {
-    const result = Rooms(initialState, toggleIsUsed(4))
+    const result = Rooms(initialState, useRoom(4))
 
     expect(result).toEqual(initialState)
   })

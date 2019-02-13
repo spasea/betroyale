@@ -24,7 +24,7 @@ export const AddRooms = () => async dispatch => {
   dispatch(addRooms(roomsList))
 }
 
-export const toggleIsUsed = payload => ({
+export const useRoom = payload => ({
   type: USE_ROOM,
   payload
 })
