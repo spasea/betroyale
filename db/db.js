@@ -7,7 +7,7 @@ const block = {
   height: 100,
 }
 const locations = {
-  amount: 4,
+  amount: 1,
 }
 
 const rooms = {
