@@ -20,6 +20,7 @@
     "start:db": "json-server ./db/db.js -p 4000",
     "build": "cross-env NODE_ENV=production react-scripts build",
     "test": "react-scripts test",
+    "test:watch": "react-scripts test --watch",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
