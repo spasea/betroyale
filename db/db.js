@@ -7,7 +7,7 @@ const block = {
   height: 100,
 }
 const locations = {
-  amount: 1,
+  amount: 2,
 }
 
 const rooms = {
@@ -128,11 +128,11 @@ const initRooms = amount => {
   ]
 
   const generateRelatedLocations = () => {
-    const locationsIds = Array(locations.amount).fill(null).map((_, id) => id)
+    const locationsIds = Array(locations.amount).fill(null).map((_, id) => id + 1)
 
-    return Array(random(1, 2)).fill(null).map(() => ({
-      id: locationsIds.splice(random(0, locationsIds.length - 1), 1)[0]
-    }))
+    return Array(random(1, 2)).fill(null).map(() =>
+      locationsIds.splice(random(0, locationsIds.length - 1), 1)[0]
+    )
   }
 
   const generateEvents = () => {
@@ -146,9 +146,7 @@ const initRooms = amount => {
     return Array(random(1, 2)).fill(null).map(() => {
       const type = eventsTypes[random(0, eventsTypes.length - 1)]
 
-      return {
-        id: items[type].splice(random(0, items[type].length - 1), 1)[0].id
-      }
+      return items[type].splice(random(0, items[type].length - 1), 1)[0].id
     })
   }
 
