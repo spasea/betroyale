@@ -1,4 +1,5 @@
 export const ADD_LOCATIONS = 'ADD_LOCATIONS'
+export const ADD_LOCATION_ROOM = 'ADD_LOCATION_ROOM'
 
 export const ADD_ROOMS = 'ADD_ROOMS'
 export const USE_ROOM = 'USE_ROOM'

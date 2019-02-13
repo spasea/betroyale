@@ -1,5 +1,6 @@
 import {
   ADD_LOCATIONS,
+  ADD_LOCATION_ROOM,
 } from '../ActionTypes'
 
 import Http from '../../Services/Http'
@@ -24,3 +25,8 @@ export const AddLocations = () => async dispatch => {
 
   dispatch(addLocations(locationsList))
 }
+
+export const addLocationRoom = payload => ({
+  type: ADD_LOCATION_ROOM,
+  payload
+})
