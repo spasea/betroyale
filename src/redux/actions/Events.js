@@ -2,8 +2,8 @@ import {
   ADD_EVENTS,
 } from '../ActionTypes'
 
-import config from '../../config'
-import axios from 'axios'
+import Http from '../../Services/Http'
+import { events } from '../../config'
 
 export const addEvents = payload => ({
   type: ADD_EVENTS,
@@ -11,7 +11,12 @@ export const addEvents = payload => ({
 })
 
 export const AddEvents = () => async dispatch => {
-  const { data } = await axios.get(config[process.env.NODE_ENV].events.get.url)
+  const { data } = await Http.execute(events, 'get')
 
-  dispatch(addEvents(data))
+  const eventsList = data.map(event => ({
+    ...event,
+    isUsed: false,
+  }))
+
+  dispatch(addEvents(eventsList))
 }
