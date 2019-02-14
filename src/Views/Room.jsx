@@ -1,11 +1,9 @@
 import React from 'react'
 
-const Room = ({ coordinates, exits, margins, getExit, addRoom }) => {
+const Room = ({ coordinates, exits, margins, getExit, addRoom, id }) => {
   return <div className="block" style={{
     ...margins
   }}>
-    { JSON.stringify(coordinates) }
-
     {
       exits && exits.map(exit =>
         <div className={`block__side ${getExit(exit).className}`}

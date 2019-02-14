@@ -53,9 +53,7 @@ class Room extends Component {
 
   render() {
     return (
-      <RoomView coordinates={this.props.coordinates}
-                exits={this.props.exits}
-                addRoom={this.props.addRoom}
+      <RoomView {...this.props}
                 getExit={this.getExit}
                 margins={this.margins}
       />

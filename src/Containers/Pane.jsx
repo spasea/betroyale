@@ -12,16 +12,30 @@ const mapDispatchToProps = dispatch => ({
 })
 
 class Pane extends Component {
+  state = {
+    activeLocationId: 1,
+  }
+
   render() {
     return (
       <div>
         {
-          // this.props.locations.map(location =>
-          //   <Location {...location} key={location.id} />
-          // )
+          this.props.locations.map(location =>
+            <div key={location.id}>
+              {
+                this.state.activeLocationId === location.id && <Location {...location} />
+              }
+              <button className='location-button'
+                      style={{ left: 200 * (location.id - 1) }}
+                      onClick={() => {
+                        this.setState({
+                          activeLocationId: location.id,
+                        })
+                      }}
+              >{location.title}</button>
+            </div>
+          )
         }
-
-        <Location {...this.props.locations[0]} />
       </div>
     )
   }

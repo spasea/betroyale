@@ -3,10 +3,8 @@ import { connect } from 'react-redux'
 import Room from './Room'
 
 import { locationExists } from '../config'
-import {
-  placeRoom,
-  useRoom,
-} from '../redux/actions/Rooms'
+import { placeRoom, useRoom } from '../redux/actions/Rooms'
+import { addLocationRoom} from '../redux/actions/Locations'
 
 const mapStateToProps = state => ({
   Common: state.Common,
@@ -16,6 +14,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   useRoom: id => dispatch(useRoom(id)),
   placeRoom: info => dispatch(placeRoom(info)),
+  addLocationRoom: info => dispatch(addLocationRoom(info)),
 })
 
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
@@ -23,11 +22,6 @@ const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 class Location extends Component {
   addRoom = (exit, roomCoordinates) => {
     const room = this.availableRooms[random(0, this.availableRooms.length - 1)]
-
-    console.log({
-      room,
-      avail: this.availableRooms,
-    })
 
     if (!room) {
       return
@@ -40,6 +34,7 @@ class Location extends Component {
 
     this.props.useRoom(room.id)
     this.props.placeRoom({ id: room.id, coordinates })
+    this.props.addLocationRoom({ locationId: this.props.id, roomId: room.id })
   }
 
   get relatedRooms () {
@@ -51,7 +46,7 @@ class Location extends Component {
   }
 
   get usedRooms () {
-    return this.relatedRooms.filter(room => room.isUsed)
+    return this.relatedRooms.filter(room => room.isUsed && this.props.roomsList.includes(room.id))
   }
 
   get exits () {
