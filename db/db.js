@@ -88,8 +88,12 @@ const initLocations = amount => {
 
   return Array(amount).fill(null).map((_, id) => ({
     id: id + 1,
-    title: faker.lorem.words(2),
-    image: faker.image.abstract(block.width, block.height),
+    title: faker.commerce.productName(),
+    image: [
+      faker.image.abstract(block.width, block.height),
+      faker.image.abstract(block.width, block.height),
+      faker.image.abstract(block.width, block.height),
+    ],
     exits: generateExits(random(3, 7), exits)
   }))
 }

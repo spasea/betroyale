@@ -1,8 +1,9 @@
 import React from 'react'
 
-const Room = ({ coordinates, exits, margins, getExit, addRoom, id }) => {
+const Room = ({ coordinates, exits, margins, getExit, addRoom, image }) => {
   return <div className="block" style={{
-    ...margins
+    ...margins,
+    background: `url(${image})`
   }}>
     {
       exits && exits.map(exit =>

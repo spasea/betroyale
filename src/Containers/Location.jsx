@@ -99,9 +99,15 @@ class Location extends Component {
   render() {
     return (
       <div>
-        <Room exits={this.exits[locationExists.TOP]} coordinates={{ x: 0, y: -1 }} addRoom={this.addRoom} />
-        <Room exits={this.exits[locationExists.MIDDLE]} coordinates={{ x: 0, y: 0 }} addRoom={this.addRoom} />
-        <Room exits={this.exits[locationExists.BOTTOM]} coordinates={{ x: 0, y: 1 }} addRoom={this.addRoom} />
+        <Room exits={this.exits[locationExists.TOP]} coordinates={{ x: 0, y: -1 }} addRoom={this.addRoom}
+              image={this.props.image[0]}
+        />
+        <Room exits={this.exits[locationExists.MIDDLE]} coordinates={{ x: 0, y: 0 }} addRoom={this.addRoom}
+              image={this.props.image[1]}
+        />
+        <Room exits={this.exits[locationExists.BOTTOM]} coordinates={{ x: 0, y: 1 }} addRoom={this.addRoom}
+              image={this.props.image[2]}
+        />
 
         {
           this.usedRooms && this.usedRooms.map(room =>

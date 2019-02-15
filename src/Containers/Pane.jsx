@@ -25,7 +25,7 @@ class Pane extends Component {
               {
                 this.state.activeLocationId === location.id && <Location {...location} />
               }
-              <button className='location-button'
+              <button className={`location-button ${this.state.activeLocationId === location.id ? 'location-button--is-active' : ''}`}
                       style={{ left: 200 * (location.id - 1) }}
                       onClick={() => {
                         this.setState({
