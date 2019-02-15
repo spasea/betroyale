@@ -1,20 +1,25 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Room from './Room'
-
+import { useEvent } from '../redux/actions/Events'
 import { locationExists } from '../config'
 import { placeRoom, useRoom } from '../redux/actions/Rooms'
 import { addLocationRoom} from '../redux/actions/Locations'
 
+import Alert from '../Services/Alert'
+
+import Room from './Room'
+
 const mapStateToProps = state => ({
   Common: state.Common,
   Rooms: state.Rooms,
+  Events: state.Events,
 })
 
 const mapDispatchToProps = dispatch => ({
   useRoom: id => dispatch(useRoom(id)),
   placeRoom: info => dispatch(placeRoom(info)),
   addLocationRoom: info => dispatch(addLocationRoom(info)),
+  useEvent: id => dispatch(useEvent(id)),
 })
 
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
@@ -24,6 +29,8 @@ class Location extends Component {
     const room = this.availableRooms[random(0, this.availableRooms.length - 1)]
 
     if (!room) {
+      Alert.execute(`No more rooms for this location`)
+
       return
     }
 
@@ -35,6 +42,15 @@ class Location extends Component {
     this.props.useRoom(room.id)
     this.props.placeRoom({ id: room.id, coordinates })
     this.props.addLocationRoom({ locationId: this.props.id, roomId: room.id })
+
+    this.props.Events.forEach(event => {
+      if (!room.events.includes(event.id) || event.isUsed) {
+        return
+      }
+
+      this.props.useEvent(event.id)
+      Alert.execute(`${event.type}: ${event.title}\n${event.description}`)
+    })
   }
 
   get relatedRooms () {

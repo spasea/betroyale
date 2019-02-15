@@ -11,7 +11,7 @@ const mapDispatchToProps = dispatch => ({
 
 })
 
-class Room extends Component {
+class RoomContainer extends Component {
   state = {
     modifiers: [
       {
@@ -64,4 +64,4 @@ class Room extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Room)
+)(RoomContainer)
