@@ -25,6 +25,22 @@ const mapDispatchToProps = dispatch => ({
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
 class Location extends Component {
+  getNewCoordinates = (exit, roomCoordinates) => ({
+    x: roomCoordinates.x + exit.x,
+    y: roomCoordinates.y + exit.y,
+  })
+
+  useEvents = (room) => {
+    this.props.Events.forEach(event => {
+      if (!room.events.includes(event.id) || event.isUsed) {
+        return
+      }
+
+      this.props.useEvent(event.id)
+      Alert.execute(`${event.type}: ${event.title}\n${event.description}`)
+    })
+  }
+
   addRoom = (exit, roomCoordinates) => {
     const room = this.availableRooms[random(0, this.availableRooms.length - 1)]
 
@@ -34,23 +50,13 @@ class Location extends Component {
       return
     }
 
-    const coordinates = {
-      x: roomCoordinates.x + exit.x,
-      y: roomCoordinates.y + exit.y,
-    }
+    const coordinates = this.getNewCoordinates(exit, roomCoordinates)
 
     this.props.useRoom(room.id)
     this.props.placeRoom({ id: room.id, coordinates })
     this.props.addLocationRoom({ locationId: this.props.id, roomId: room.id })
 
-    this.props.Events.forEach(event => {
-      if (!room.events.includes(event.id) || event.isUsed) {
-        return
-      }
-
-      this.props.useEvent(event.id)
-      Alert.execute(`${event.type}: ${event.title}\n${event.description}`)
-    })
+    this.useEvents(room)
   }
 
   get relatedRooms () {
