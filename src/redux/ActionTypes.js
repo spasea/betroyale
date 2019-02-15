@@ -7,3 +7,5 @@ export const PLACE_ROOM = 'PLACE_ROOM'
 
 export const ADD_EVENTS = 'ADD_EVENTS'
 export const USE_EVENT = 'USE_EVENT'
+
+export const UPDATE_MAX_COORINATES = 'UPDATE_MAX_COORINATES'

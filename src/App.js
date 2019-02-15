@@ -7,6 +7,10 @@ import { AddRooms } from './redux/actions/Rooms'
 
 import Pane from './Containers/Pane'
 
+const mapStateToProps = state => ({
+  Common: state.Common,
+})
+
 const mapDispatchToProps = dispatch => ({
   AddLocations: () => dispatch(AddLocations()),
   AddRooms: () => dispatch(AddRooms()),
@@ -21,8 +25,19 @@ class App extends Component {
   }
 
   render() {
+    const {
+      blockSize,
+      maxCoordinates,
+    } = this.props.Common
+
+    const width = `${(maxCoordinates.x + 1) * 2 * blockSize.width}px`
+    const height = `${(maxCoordinates.y + 1) * 2 * blockSize.height}px`
+
     return (
-      <div className="App" ref={this.appRef}>
+      <div className="App" style={{
+        width,
+        height
+      }}>
         <Pane />
       </div>
     )
@@ -30,6 +45,6 @@ class App extends Component {
 }
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(App)

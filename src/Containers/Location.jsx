@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { useEvent } from '../redux/actions/Events'
 import { locationExists } from '../config'
+
+import { useEvent } from '../redux/actions/Events'
+import { addLocationRoom } from '../redux/actions/Locations'
+import { updateMaxCoordinates } from '../redux/actions/Common'
 import { placeRoom, useRoom } from '../redux/actions/Rooms'
-import { addLocationRoom} from '../redux/actions/Locations'
 
 import Alert from '../Services/Alert'
 
@@ -20,6 +22,7 @@ const mapDispatchToProps = dispatch => ({
   placeRoom: info => dispatch(placeRoom(info)),
   addLocationRoom: info => dispatch(addLocationRoom(info)),
   useEvent: id => dispatch(useEvent(id)),
+  updateMaxCoordinates: coordinates => dispatch(updateMaxCoordinates(coordinates)),
 })
 
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
@@ -41,6 +44,18 @@ class Location extends Component {
     })
   }
 
+  updateCommonCoordinates = roomCoordinates => {
+    roomCoordinates.x = Math.abs(roomCoordinates.x)
+    roomCoordinates.y = Math.abs(roomCoordinates.y)
+
+    const newCoordinates = {
+      x: Math.max(roomCoordinates.x, this.props.Common.maxCoordinates.x),
+      y: Math.max(roomCoordinates.y, this.props.Common.maxCoordinates.y)
+    }
+
+    this.props.updateMaxCoordinates(newCoordinates)
+  }
+
   addRoom = (exit, roomCoordinates) => {
     const room = this.availableRooms[random(0, this.availableRooms.length - 1)]
 
@@ -55,6 +70,8 @@ class Location extends Component {
     this.props.useRoom(room.id)
     this.props.placeRoom({ id: room.id, coordinates })
     this.props.addLocationRoom({ locationId: this.props.id, roomId: room.id })
+
+    this.updateCommonCoordinates({ ...coordinates })
 
     this.useEvents(room)
   }
