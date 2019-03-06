@@ -1,6 +1,6 @@
 class Alert {
   static execute (message) {
-    alert(message)
+    // alert(message)
 
     return Promise.resolve(true)
   }
