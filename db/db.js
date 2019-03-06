@@ -90,9 +90,9 @@ const initLocations = amount => {
     id: id + 1,
     title: faker.commerce.productName(),
     image: [
-      faker.image.abstract(block.width, block.height),
-      faker.image.abstract(block.width, block.height),
-      faker.image.abstract(block.width, block.height),
+      'https://placeholdit.imgix.net/~text?txt=Location%20Room1&w=' + block.width + '&h=' + block.height + '&txtsize=20',
+      'https://placeholdit.imgix.net/~text?txt=Location%20Room2&w=' + block.width + '&h=' + block.height + '&txtsize=20',
+      'https://placeholdit.imgix.net/~text?txt=Location%20Room3&w=' + block.width + '&h=' + block.height + '&txtsize=20',
     ],
     exits: generateExits(random(3, 7), exits)
   }))
@@ -157,10 +157,11 @@ const initRooms = amount => {
   return Array(amount).fill(null).map((_, id) => ({
     id: id + 1,
     title: faker.lorem.words(2),
-    image: faker.image.abstract(block.width, block.height),
+    image: 'https://placeholdit.imgix.net/~text?txt=Room%20' + (id + 1) + '&w=' + block.width + '&h=' + block.height + '&txtsize=20',
     relatedLocations: generateRelatedLocations(),
     events: generateEvents(),
-    exits: generateExits(random(1, 4), exits),
+    exitsAmount: random(1, 4),
+    // exits: generateExits(random(1, 4), exits),
   }))
 }
 
