@@ -4,6 +4,8 @@ import {
 } from '../actions/Locations'
 import Locations from './Locations'
 
+import LocationRoomDTO from '../../DTO/LocationRoomDTO'
+
 describe('basic', () => {
   it('should init correctly', () => {
     const locationsList = [
@@ -25,23 +27,26 @@ describe('add room to the location', () => {
       id: 1,
       title: 'This is a title',
       roomsList: [],
+      roomsCoordinates: [],
     },
     {
       id: 2,
       title: 'This is a second title',
       roomsList: [],
+      roomsCoordinates: [],
     },
   ]
 
   it('should add room id to a location if location id is correct', () => {
     const roomId = 21
-    const result = Locations(initialState, addLocationRoom({ locationId: 1, roomId }))
+    const result = Locations(initialState, addLocationRoom(LocationRoomDTO.execute(1, roomId, { x: 1, y: 1 })))
 
     expect(result).toEqual([
       {
         id: 2,
         title: 'This is a second title',
         roomsList: [],
+        roomsCoordinates: [],
       },
       {
         id: 1,
@@ -49,13 +54,20 @@ describe('add room to the location', () => {
         roomsList: [
           roomId
         ],
+        roomsCoordinates: [
+          {
+            id: roomId,
+            x: 1,
+            y: 1,
+          }
+        ],
       },
     ])
   })
 
   it('should not add room id to a location if location id is incorrect', () => {
     const roomId = 21
-    const result = Locations(initialState, addLocationRoom({ locationId: 10, roomId }))
+    const result = Locations(initialState, addLocationRoom(LocationRoomDTO.execute(10, roomId, { x: 1, y: 1 })))
 
     expect(result).toEqual(initialState)
   })
@@ -65,7 +77,7 @@ describe('add room to the location', () => {
     localState[0].roomsList = [21]
 
     const roomId = 21
-    const result = Locations(initialState, addLocationRoom({ locationId: 1, roomId }))
+    const result = Locations(initialState, addLocationRoom(LocationRoomDTO.execute(1, roomId, { x: 1, y: 1 })))
 
     expect(result).toEqual(localState)
   })

@@ -21,6 +21,7 @@ export const AddLocations = () => async dispatch => {
   const locationsList = data.map(location => ({
     ...location,
     roomsList: [],
+    roomsCoordinates: [],
   }))
 
   dispatch(addLocations(locationsList))

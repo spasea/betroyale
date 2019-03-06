@@ -11,6 +11,7 @@ export default (state = [], action) => {
     case ADD_LOCATION_ROOM:
       const locationId = +action.payload.locationId
       const roomId = +action.payload.roomId
+      const roomCoordinates = action.payload.roomCoordinates
       const location = state.find(location => +location.id === locationId)
 
       if (!location) {
@@ -28,6 +29,13 @@ export default (state = [], action) => {
           roomsList: [
             ...location.roomsList,
             roomId,
+          ],
+          roomsCoordinates: [
+            ...location.roomsCoordinates,
+            {
+              id: roomId,
+              ...roomCoordinates
+            }
           ]
         }
       ]
