@@ -7,12 +7,14 @@ import { addLocationRoom } from '../redux/actions/Locations'
 import { updateMaxCoordinates } from '../redux/actions/Common'
 import { placeRoom, useRoom } from '../redux/actions/Rooms'
 
-import Alert from '../Services/Alert'
+import LocationRoomDTO from '../DTO/LocationRoomDTO'
 
+import Alert from '../Services/Alert'
 import Room from './Room'
 
 const mapStateToProps = state => ({
   Common: state.Common,
+  Locations: state.Locations,
   Rooms: state.Rooms,
   Events: state.Events,
 })
@@ -32,6 +34,12 @@ class Location extends Component {
     x: roomCoordinates.x + exit.x,
     y: roomCoordinates.y + exit.y,
   })
+
+  get currentLocation () {
+    return this.props.Locations.find(location => location.id === this.props.id) || {
+      roomsCoordinates: [],
+    }
+  }
 
   useEvents = (room) => {
     this.props.Events.forEach(event => {
@@ -56,6 +64,44 @@ class Location extends Component {
     this.props.updateMaxCoordinates(newCoordinates)
   }
 
+  getNearbyRooms (coordinates) {
+    const satisfyingCoordinates = {
+      x: [
+        coordinates.x + 1,
+        coordinates.x,
+        coordinates.x - 1,
+      ],
+      y: [
+        coordinates.y + 1,
+        coordinates.y,
+        coordinates.y - 1,
+      ]
+    }
+
+    const filteredRooms = this.currentLocation.roomsCoordinates.filter(roomCoordinates =>
+      satisfyingCoordinates.x.includes(roomCoordinates.x) && satisfyingCoordinates.y.includes(roomCoordinates.y)
+    )
+
+    const compareCoordinates = (coordinates, roomCoordinates) =>
+      coordinates.x === roomCoordinates.x && coordinates.y === roomCoordinates.y
+
+    const hasTop = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x, y: coordinates.y - 1 }, room))
+    const hasBottom = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x, y: coordinates.y + 1 }, room))
+    const hasLeft = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x - 1, y: coordinates.y }, room))
+    const hasRight = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x + 1, y: coordinates.y }, room))
+
+    return {
+      hasBottom,
+      hasTop,
+      hasLeft,
+      hasRight,
+    }
+  }
+
+  generateRoomExits = () => {
+
+  }
+
   addRoom = (exit, roomCoordinates) => {
     const room = this.availableRooms[random(0, this.availableRooms.length - 1)]
 
@@ -67,9 +113,11 @@ class Location extends Component {
 
     const coordinates = this.getNewCoordinates(exit, roomCoordinates)
 
+    const hasNearbyRooms = this.getNearbyRooms(coordinates)
+
     this.props.useRoom(room.id)
     this.props.placeRoom({ id: room.id, coordinates })
-    this.props.addLocationRoom({ locationId: this.props.id, roomId: room.id })
+    this.props.addLocationRoom(LocationRoomDTO.execute(this.props.id, room.id, coordinates))
 
     this.updateCommonCoordinates({ ...coordinates })
 
