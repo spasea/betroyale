@@ -11,11 +11,11 @@ const locations = {
 }
 
 const rooms = {
-  amount: 10,
+  amount: 60,
 }
 
 const events = {
-  amount: 20,
+  amount: 120,
   types: {
     OMEN: 'OMEN',
     ITEM: 'ITEM',

@@ -1,4 +1,5 @@
 import {
+  addExits,
   addRooms,
   placeRoom,
   useRoom,
@@ -104,5 +105,48 @@ describe('playing the room', () => {
     const result = Rooms(initialState, placeRoom({ id: 4, coordinates }))
 
     expect(result).toEqual(initialState)
+  })
+})
+
+describe('adding exits', () => {
+  const initialState = [
+    {
+      id: 1,
+      title: 'This is a title',
+      exits: [],
+    },
+    {
+      id: 2,
+      title: 'This is a second title',
+      exits: [],
+    },
+  ]
+
+  it('should add exits if the room id is correct', () => {
+    const exits = [
+      {
+        x: 1,
+        y: 0,
+      },
+      {
+        x: 1,
+        y: 1,
+      },
+    ]
+
+    const result = Rooms(initialState, addExits({ id: 1, exits }))
+
+    expect(result).toEqual([
+      {
+        id: 2,
+        title: 'This is a second title',
+        exits: [],
+      },
+      {
+        id: 1,
+        title: 'This is a title',
+        exits,
+      },
+    ])
   })
 })

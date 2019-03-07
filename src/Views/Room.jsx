@@ -8,7 +8,7 @@ const Room = ({ coordinates, exits, margins, getExit, addRoom, image }) => {
     {
       exits && exits.map(exit =>
         <div className={`block__side ${getExit(exit).className}`}
-             key={exit.id}
+             key={`${exit.x}:${exit.y}`}
              onClick={() => addRoom(exit, coordinates)}
         />
       )

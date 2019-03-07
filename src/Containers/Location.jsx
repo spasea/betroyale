@@ -5,7 +5,7 @@ import { locationExists } from '../config'
 import { useEvent } from '../redux/actions/Events'
 import { addLocationRoom } from '../redux/actions/Locations'
 import { updateMaxCoordinates } from '../redux/actions/Common'
-import { placeRoom, useRoom } from '../redux/actions/Rooms'
+import { addExits, placeRoom, useRoom } from '../redux/actions/Rooms'
 
 import LocationRoomDTO from '../DTO/LocationRoomDTO'
 
@@ -21,6 +21,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   useRoom: id => dispatch(useRoom(id)),
+  addExits: (id, exits) => dispatch(addExits({ id, exits })),
   placeRoom: info => dispatch(placeRoom(info)),
   addLocationRoom: info => dispatch(addLocationRoom(info)),
   useEvent: id => dispatch(useEvent(id)),
@@ -85,21 +86,96 @@ class Location extends Component {
     const compareCoordinates = (coordinates, roomCoordinates) =>
       coordinates.x === roomCoordinates.x && coordinates.y === roomCoordinates.y
 
-    const hasTop = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x, y: coordinates.y - 1 }, room))
-    const hasBottom = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x, y: coordinates.y + 1 }, room))
-    const hasLeft = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x - 1, y: coordinates.y }, room))
-    const hasRight = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x + 1, y: coordinates.y }, room))
+    const top = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x, y: coordinates.y - 1 }, room))
+    const bottom = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x, y: coordinates.y + 1 }, room))
+    const left = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x - 1, y: coordinates.y }, room))
+    const right = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x + 1, y: coordinates.y }, room))
 
     return {
-      hasBottom,
-      hasTop,
-      hasLeft,
-      hasRight,
+      bottom,
+      top,
+      left,
+      right,
     }
   }
 
-  generateRoomExits = () => {
+  generateRoomExits = (nearbyRooms, exit, exitsAmount) => {
+    let totalAmount = exitsAmount
+    const firstEntry = {
+      x: exit.x ? exit.x * -1 : exit.x,
+      y: exit.y ? exit.y * -1 : exit.y,
+    }
 
+    const filterByFirstEntry = exitItem => (exitItem.x !== firstEntry.x) || (exitItem.y !== firstEntry.y)
+    const filterByFirstPriority = exitItem => !nearbyRooms[exitItem.position]
+    const filterBySecondPriority = exitItem => !filterByFirstPriority(exitItem)
+
+    const exits = [
+      {
+        position: 'right',
+        x: 1,
+        y: 0,
+      },
+      {
+        position: 'left',
+        x: -1,
+        y: 0,
+      },
+      {
+        position: 'bottom',
+        x: 0,
+        y: 1,
+      },
+      {
+        position: 'top',
+        x: 0,
+        y: -1,
+      },
+    ].filter(filterByFirstEntry)
+
+    const firstPriority = exits.filter(filterByFirstPriority)
+
+    const secondPriority = exits.filter(filterBySecondPriority)
+
+
+
+    console.log({
+      nearbyRooms,
+      firstPriority,
+      secondPriority,
+      exit,
+      exitsAmount,
+      exits,
+      firstEntry
+    })
+
+
+    const firstExit = firstEntry
+    totalAmount -= 1
+
+    if (!totalAmount) {
+      return [
+        firstExit
+      ]
+    }
+
+    const secondExits = firstPriority.slice(0, totalAmount)
+
+    totalAmount -= firstPriority.length
+
+    if (!totalAmount) {
+      return [
+        firstExit,
+        ...secondExits
+      ]
+    }
+
+
+    return [
+      firstExit,
+      ...secondExits,
+      ...secondPriority
+    ]
   }
 
   addRoom = (exit, roomCoordinates) => {
@@ -114,6 +190,9 @@ class Location extends Component {
     const coordinates = this.getNewCoordinates(exit, roomCoordinates)
 
     const hasNearbyRooms = this.getNearbyRooms(coordinates)
+    const newExits = this.generateRoomExits(hasNearbyRooms, exit, room.exitsAmount)
+
+    this.props.addExits(room.id, newExits)
 
     this.props.useRoom(room.id)
     this.props.placeRoom({ id: room.id, coordinates })

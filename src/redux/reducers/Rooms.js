@@ -1,7 +1,7 @@
 import {
   ADD_ROOMS,
   USE_ROOM,
-  PLACE_ROOM,
+  PLACE_ROOM, ADD_EXITS,
 } from '../ActionTypes'
 
 const getRoom = (state, roomId) =>
@@ -24,6 +24,11 @@ const changeRoomProp = (state, roomId, [title, value]) => {
 }
 
 export default (state = [], action) => {
+  const roomProps = {
+    coordinates: 'coordinates',
+    exits: 'exits',
+  }
+
   switch (action.type) {
     case ADD_ROOMS:
       return action.payload
@@ -45,7 +50,10 @@ export default (state = [], action) => {
       ]
 
     case PLACE_ROOM:
-      return changeRoomProp(state, action.payload.id, ['coordinates', action.payload.coordinates] )
+      return changeRoomProp(state, action.payload.id, [roomProps.coordinates, action.payload.coordinates] )
+
+    case ADD_EXITS:
+      return changeRoomProp(state, action.payload.id, [roomProps.exits, action.payload.exits])
 
     default:
       return state
