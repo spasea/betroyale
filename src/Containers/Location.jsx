@@ -8,8 +8,11 @@ import { updateMaxCoordinates } from '../redux/actions/Common'
 import { addExits, placeRoom, useRoom } from '../redux/actions/Rooms'
 
 import LocationRoomDTO from '../DTO/LocationRoomDTO'
+import CoordinatesService from '../Services/Room/Coordinates'
+import RoomEntity from '../Enteties/Room'
 
 import Alert from '../Services/Alert'
+import Random from '../Services/Random'
 import Room from './Room'
 
 const mapStateToProps = state => ({
@@ -28,21 +31,34 @@ const mapDispatchToProps = dispatch => ({
   updateMaxCoordinates: coordinates => dispatch(updateMaxCoordinates(coordinates)),
 })
 
-const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
-
 class Location extends Component {
-  getNewCoordinates = (exit, roomCoordinates) => ({
-    x: roomCoordinates.x + exit.x,
-    y: roomCoordinates.y + exit.y,
-  })
-
   get currentLocation () {
     return this.props.Locations.find(location => location.id === this.props.id) || {
       roomsCoordinates: [],
     }
   }
 
-  useEvents = (room) => {
+  get relatedRooms () {
+    return this.props.Rooms.filter(room => room.relatedLocations.includes(this.props.id))
+  }
+
+  get availableRooms () {
+    return this.relatedRooms.filter(room => !room.isUsed)
+  }
+
+  get usedRooms () {
+    return this.relatedRooms.filter(room => room.isUsed && this.props.roomsList.includes(room.id))
+  }
+
+  get exits () {
+    return this.props.exits ? {
+      [locationExists.TOP]: this.props.exits.filter(exit => exit.position === locationExists.TOP),
+      [locationExists.MIDDLE]: this.props.exits.filter(exit => exit.position === locationExists.MIDDLE),
+      [locationExists.BOTTOM]: this.props.exits.filter(exit => exit.position === locationExists.BOTTOM),
+    } : {}
+  }
+
+  useEvents = room => {
     this.props.Events.forEach(event => {
       if (!room.events.includes(event.id) || event.isUsed) {
         return
@@ -65,121 +81,8 @@ class Location extends Component {
     this.props.updateMaxCoordinates(newCoordinates)
   }
 
-  getNearbyRooms (coordinates) {
-    const satisfyingCoordinates = {
-      x: [
-        coordinates.x + 1,
-        coordinates.x,
-        coordinates.x - 1,
-      ],
-      y: [
-        coordinates.y + 1,
-        coordinates.y,
-        coordinates.y - 1,
-      ]
-    }
-
-    const filteredRooms = this.currentLocation.roomsCoordinates.filter(roomCoordinates =>
-      satisfyingCoordinates.x.includes(roomCoordinates.x) && satisfyingCoordinates.y.includes(roomCoordinates.y)
-    )
-
-    const compareCoordinates = (coordinates, roomCoordinates) =>
-      coordinates.x === roomCoordinates.x && coordinates.y === roomCoordinates.y
-
-    const top = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x, y: coordinates.y - 1 }, room))
-    const bottom = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x, y: coordinates.y + 1 }, room))
-    const left = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x - 1, y: coordinates.y }, room))
-    const right = !!filteredRooms.find(room => compareCoordinates({ x: coordinates.x + 1, y: coordinates.y }, room))
-
-    return {
-      bottom,
-      top,
-      left,
-      right,
-    }
-  }
-
-  generateRoomExits = (nearbyRooms, exit, exitsAmount) => {
-    let totalAmount = exitsAmount
-    const firstEntry = {
-      x: exit.x ? exit.x * -1 : exit.x,
-      y: exit.y ? exit.y * -1 : exit.y,
-    }
-
-    const filterByFirstEntry = exitItem => (exitItem.x !== firstEntry.x) || (exitItem.y !== firstEntry.y)
-    const filterByFirstPriority = exitItem => !nearbyRooms[exitItem.position]
-    const filterBySecondPriority = exitItem => !filterByFirstPriority(exitItem)
-
-    const exits = [
-      {
-        position: 'right',
-        x: 1,
-        y: 0,
-      },
-      {
-        position: 'left',
-        x: -1,
-        y: 0,
-      },
-      {
-        position: 'bottom',
-        x: 0,
-        y: 1,
-      },
-      {
-        position: 'top',
-        x: 0,
-        y: -1,
-      },
-    ].filter(filterByFirstEntry)
-
-    const firstPriority = exits.filter(filterByFirstPriority)
-
-    const secondPriority = exits.filter(filterBySecondPriority)
-
-
-
-    console.log({
-      nearbyRooms,
-      firstPriority,
-      secondPriority,
-      exit,
-      exitsAmount,
-      exits,
-      firstEntry
-    })
-
-
-    const firstExit = firstEntry
-    totalAmount -= 1
-
-    if (!totalAmount) {
-      return [
-        firstExit
-      ]
-    }
-
-    const secondExits = firstPriority.slice(0, totalAmount)
-
-    totalAmount -= firstPriority.length
-
-    if (!totalAmount) {
-      return [
-        firstExit,
-        ...secondExits
-      ]
-    }
-
-
-    return [
-      firstExit,
-      ...secondExits,
-      ...secondPriority
-    ]
-  }
-
-  addRoom = (exit, roomCoordinates) => {
-    const room = this.availableRooms[random(0, this.availableRooms.length - 1)]
+  addRoom = async (exit, roomCoordinates) => {
+    const room = this.availableRooms[Random.integer(0, this.availableRooms.length - 1)]
 
     if (!room) {
       Alert.execute(`No more rooms for this location`)
@@ -187,40 +90,23 @@ class Location extends Component {
       return
     }
 
-    const coordinates = this.getNewCoordinates(exit, roomCoordinates)
-
-    const hasNearbyRooms = this.getNearbyRooms(coordinates)
-    const newExits = this.generateRoomExits(hasNearbyRooms, exit, room.exitsAmount)
-
-    this.props.addExits(room.id, newExits)
-
+    const coordinates = CoordinatesService.execute(exit, roomCoordinates)
     this.props.useRoom(room.id)
-    this.props.placeRoom({ id: room.id, coordinates })
+    await this.props.placeRoom({ id: room.id, coordinates })
+
+    const roomUsed = this.props.Rooms.find(usedRoom => usedRoom.id === room.id)
+
+    const RoomInstance = new RoomEntity(roomUsed)
+    RoomInstance.setRandomService(Random)
+    RoomInstance.mainEntry = exit
+    RoomInstance.setRoomsList(this.currentLocation.roomsCoordinates)
+
+    const instEx = RoomInstance.generateExits()
+
+    this.props.addExits(room.id, instEx)
     this.props.addLocationRoom(LocationRoomDTO.execute(this.props.id, room.id, coordinates))
-
     this.updateCommonCoordinates({ ...coordinates })
-
     this.useEvents(room)
-  }
-
-  get relatedRooms () {
-    return this.props.Rooms.filter(room => room.relatedLocations.includes(this.props.id))
-  }
-
-  get availableRooms () {
-    return this.relatedRooms.filter(room => !room.isUsed)
-  }
-
-  get usedRooms () {
-    return this.relatedRooms.filter(room => room.isUsed && this.props.roomsList.includes(room.id))
-  }
-
-  get exits () {
-    return this.props.exits ? {
-      [locationExists.TOP]: this.props.exits.filter(exit => exit.position === locationExists.TOP),
-      [locationExists.MIDDLE]: this.props.exits.filter(exit => exit.position === locationExists.MIDDLE),
-      [locationExists.BOTTOM]: this.props.exits.filter(exit => exit.position === locationExists.BOTTOM),
-    } : {}
   }
 
   render() {
