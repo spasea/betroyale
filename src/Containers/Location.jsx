@@ -101,9 +101,7 @@ class Location extends Component {
     RoomInstance.mainEntry = exit
     RoomInstance.setRoomsList(this.currentLocation.roomsCoordinates)
 
-    const instEx = RoomInstance.generateExits()
-
-    this.props.addExits(room.id, instEx)
+    this.props.addExits(room.id, RoomInstance.generateExits())
     this.props.addLocationRoom(LocationRoomDTO.execute(this.props.id, room.id, coordinates))
     this.updateCommonCoordinates({ ...coordinates })
     this.useEvents(room)
