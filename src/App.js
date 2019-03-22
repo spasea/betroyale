@@ -25,9 +25,9 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.props.AddLocations()
-    this.props.AddRooms()
-    this.props.AddEvents()
+    // this.props.AddLocations()
+    // this.props.AddRooms()
+    // this.props.AddEvents()
   }
 
   render() {
