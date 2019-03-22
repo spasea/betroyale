@@ -22,6 +22,8 @@ class App extends Component {
     this.props.AddLocations()
     this.props.AddRooms()
     this.props.AddEvents()
+
+    console.log('just a test here')
   }
 
   render() {
