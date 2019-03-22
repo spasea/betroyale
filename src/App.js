@@ -18,9 +18,13 @@ const mapDispatchToProps = dispatch => ({
 })
 
 class App extends Component {
-  componentDidMount() {
+  constructor () {
+    super()
+
     console.log('just a test here')
-    
+  }
+
+  componentDidMount() {
     this.props.AddLocations()
     this.props.AddRooms()
     this.props.AddEvents()
